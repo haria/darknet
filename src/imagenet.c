@@ -12,16 +12,16 @@ void train_imagenet(char *cfgfile, char *weightfile)
     srand(time(0));
     float avg_loss = -1;
     char *base = basecfg(cfgfile);
-    char *backup_directory = "/home/pjreddie/backup/";
+    char *backup_directory = ".";
     printf("%s\n", base);
     network net = parse_network_cfg(cfgfile);
     if(weightfile){
         load_weights(&net, weightfile);
     }
     printf("Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay);
-    int imgs = 1024;
-    char **labels = get_labels("data/inet.labels.list");
-    list *plist = get_paths("data/inet.train.list");
+    int imgs = net.batch*net.subdivisions;
+    char **labels = get_labels("scripts/inet.labels.list");
+    list *plist = get_paths("scripts/2007_train.txt");
     char **paths = (char **)list_to_array(plist);
     printf("%d\n", plist->size);
     int N = plist->size;
@@ -34,7 +34,8 @@ void train_imagenet(char *cfgfile, char *weightfile)
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
-    args.classes = 1000;
+    //#TODO 
+    args.classes = 2;
     args.n = imgs;
     args.m = N;
     args.labels = labels;
@@ -75,7 +76,8 @@ void train_imagenet(char *cfgfile, char *weightfile)
     pthread_join(load_thread, 0);
     free_data(buffer);
     free_network(net);
-    free_ptrs((void**)labels, 1000);
+    //#TODO
+    free_ptrs((void**)labels, 2);
     free_ptrs((void**)paths, plist->size);
     free_list(plist);
     free(base);
@@ -110,7 +112,8 @@ void validate_imagenet(char *filename, char *weightfile)
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
-    args.classes = 1000;
+    //#TODO
+    args.classes = 2;
     args.n = num;
     args.m = 0;
     args.labels = labels;

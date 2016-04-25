@@ -34,7 +34,8 @@ void train_compare(char *cfgfile, char *weightfile)
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
-    args.classes = 20;
+    //#TODO
+    args.classes = 2;
     args.n = imgs;
     args.m = N;
     args.d = &buffer;
@@ -106,7 +107,8 @@ void validate_compare(char *filename, char *weightfile)
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
-    args.classes = 20;
+    //#TODO
+    args.classes = 2;
     args.n = num;
     args.m = 0;
     args.d = &buffer;
@@ -131,7 +133,8 @@ void validate_compare(char *filename, char *weightfile)
         matrix pred = network_predict_data(net, val);
         int j,k;
         for(j = 0; j < val.y.rows; ++j){
-            for(k = 0; k < 20; ++k){
+            //#TODO
+            for(k = 0; k < 2; ++k){
                 if(val.y.vals[j][k*2] != val.y.vals[j][k*2+1]){
                     ++total;
                     if((val.y.vals[j][k*2] < val.y.vals[j][k*2+1]) == (pred.vals[j][k*2] < pred.vals[j][k*2+1])){

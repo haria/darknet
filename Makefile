@@ -1,8 +1,11 @@
-GPU=0
-OPENCV=0
+#export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/lib/x86_64-linux-gnu/pkgconfig/
+#export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig/
+GPU=1
+OPENCV=1
 DEBUG=0
 
-ARCH= --gpu-architecture=compute_20 --gpu-code=compute_20 
+ARCH= --gpu-architecture=compute_52 --gpu-code=compute_52 
+COPTS= --compiler-options "-Wall -Wfatal-errors  -Ofast -DGPU"
 
 VPATH=./src/
 EXEC=darknet
@@ -11,9 +14,9 @@ OBJDIR=./obj/
 CC=gcc
 NVCC=nvcc
 OPTS=-Ofast
-LDFLAGS= -lm -pthread -lstdc++ 
+LDFLAGS= -lm -pthread -lstdc++ -lgomp
 COMMON= 
-CFLAGS=-Wall -Wfatal-errors 
+CFLAGS=-Wall -Wfatal-errors -fopenmp
 
 ifeq ($(DEBUG), 1) 
 OPTS=-O0 -g
@@ -51,7 +54,7 @@ $(OBJDIR)%.o: %.c $(DEPS)
 	$(CC) $(COMMON) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)%.o: %.cu $(DEPS)
-	$(NVCC) $(ARCH) $(COMMON) --compiler-options "$(CFLAGS)" -c $< -o $@
+	$(NVCC) $(ARCH) $(COPTS) -c $< -o $@
 
 obj:
 	mkdir -p obj

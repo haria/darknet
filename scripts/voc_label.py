@@ -4,9 +4,11 @@ import os
 from os import listdir, getcwd
 from os.path import join
 
-sets=[('2012', 'train'), ('2012', 'val'), ('2007', 'train'), ('2007', 'val'), ('2007', 'test')]
+#sets=[('2012', 'train'), ('2012', 'val'), ('2007', 'train'), ('2007', 'val'), ('2007', 'test')]
+sets=[ ('2007', 'train')]
 
-classes = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
+#TODO
+classes = ["car","face"]
 
 
 def convert(size, box):
@@ -24,6 +26,7 @@ def convert(size, box):
 
 def convert_annotation(year, image_id):
     in_file = open('VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id))
+    os.system("mkdir -p %s"%os.path.dirname('VOCdevkit/VOC%s/labels/%s.txt'%(year, image_id)))
     out_file = open('VOCdevkit/VOC%s/labels/%s.txt'%(year, image_id), 'w')
     tree=ET.parse(in_file)
     root = tree.getroot()
@@ -32,7 +35,10 @@ def convert_annotation(year, image_id):
     h = int(size.find('height').text)
 
     for obj in root.iter('object'):
-        difficult = obj.find('difficult').text
+        try:
+            difficult = obj.find('difficult').text
+        except:
+            difficult = 0
         cls = obj.find('name').text
         if cls not in classes or int(difficult) == 1:
             continue

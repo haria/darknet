@@ -10,7 +10,7 @@ void train_dice(char *cfgfile, char *weightfile)
     srand(time(0));
     float avg_loss = -1;
     char *base = basecfg(cfgfile);
-    char *backup_directory = "/home/pjreddie/backup/";
+    char *backup_directory = ".";
     printf("%s\n", base);
     network net = parse_network_cfg(cfgfile);
     if(weightfile){

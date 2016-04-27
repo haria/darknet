@@ -104,7 +104,10 @@ void demo_yolo(char *cfgfile, char *weightfile, float thresh, int cam_index, cha
         if(pthread_create(&detect_thread, 0, detect_in_thread, 0)) error("Thread creation failed");
         show_image(disp, "YOLO");
         free_image(disp);
-        cvWaitKey(1);
+        char key = (char) cvWaitKey(10);
+	    // Exit this loop on escape:
+        if(key == 27|| key=='q' || key=='Q')
+        	break;
         pthread_join(fetch_thread, 0);
         pthread_join(detect_thread, 0);
 
